@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: service-order
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/db_point
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  kafka:
+    bootstrap-servers: localhost:9093

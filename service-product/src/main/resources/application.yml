@@ -1,0 +1,47 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: debenziumdemo
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/db_product
+    username: root
+    password: root
+
+  sql:
+    init:
+      mode: always
+
+  kafka:
+    bootstrap-servers: localhost:9093
+
+debezium:
+  connector:
+    name: product-connector
+    class: io.debezium.connector.mysql.MySqlConnector
+    endpoint-url: http://localhost:8083/connectors
+    database:
+      hostname: mysql
+      port: 3306
+      user: root
+      password: root
+      server-id: 85745
+      server-name: dbserver_product
+      include-list: db_product
+    table:
+      include-list: db_product.outbox_event
+    kafka:
+      bootstrap-servers: kafka-1:9092
+    config-topics:
+      config-storage-topic: connect-configs
+      offset-storage-topic: connect-offsets
+      status-storage-topic: connect-statuses
+      history-topic: dbhistory.product
+    tombstones-on-delete: false
+    include-schema-changes: false
+
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG

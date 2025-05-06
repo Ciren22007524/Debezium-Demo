@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS point_transaction (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_id BIGINT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    points INT NOT NULL,
+    description VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

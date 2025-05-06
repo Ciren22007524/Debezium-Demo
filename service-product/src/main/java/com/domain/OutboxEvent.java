@@ -1,5 +1,7 @@
 package com.domain;
 
+import com.constant.AggregateType;
+import com.constant.EventType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,14 +19,16 @@ public class OutboxEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "aggregate_type", nullable = false)
-    private String aggregateType;
-
     @Column(name = "aggregate_id", nullable = false)
     private Long aggregateId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "aggregate_type", nullable = false)
+    private AggregateType aggregateType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
-    private String eventType;
+    private EventType eventType;
 
     @Lob
     @Column(nullable = false)

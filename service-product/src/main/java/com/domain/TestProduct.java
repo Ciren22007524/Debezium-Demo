@@ -1,5 +1,6 @@
 package com.domain;
 
+import com.constant.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,7 +32,10 @@ public class TestProduct {
 
     private Integer stock;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private ProductStatus status = ProductStatus.CREATED;
 
     private String imgUrl;
 

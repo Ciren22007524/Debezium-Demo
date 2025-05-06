@@ -1,5 +1,6 @@
 package com.domain;
 
+import com.constant.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +21,10 @@ public class PointTransaction {
     @Column(name = "order_id", nullable = false)
     private Long orderId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String type;
+    @Builder.Default
+    private TransactionType type = TransactionType.EARN;
 
     @Column(nullable = false)
     private Integer points;

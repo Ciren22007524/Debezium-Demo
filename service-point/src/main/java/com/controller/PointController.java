@@ -1,9 +1,34 @@
 package com.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.domain.PointTransaction;
+import com.service.PointService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/point")
+@RequestMapping("/points")
+@RequiredArgsConstructor
 public class PointController {
+    private final PointService pointService;
+
+    @PostMapping("/earn")
+    public void earnPoints(@RequestParam Long orderId,
+                           @RequestParam int points,
+                           @RequestParam(required = false) String description) {
+        pointService.addEarnPoints(orderId, points, description);
+    }
+
+    @PostMapping("/redeem")
+    public void redeemPoints(@RequestParam Long orderId,
+                             @RequestParam int points,
+                             @RequestParam(required = false) String description) {
+        pointService.addRedeemPoints(orderId, points, description);
+    }
+
+    @GetMapping("/order/{orderId}")
+    public List<PointTransaction> getPointsByOrder(@PathVariable Long orderId) {
+        return pointService.getPointsByOrder(orderId);
+    }
 }

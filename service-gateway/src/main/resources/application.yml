@@ -11,12 +11,12 @@ spring:
         - id: service-order
           uri: http://localhost:8081
           predicates:
-            - Path=/order/**
+            - Path=/orders/**
         - id: service-point
           uri: http://localhost:8082
           predicates:
-            - Path=/point/**
+            - Path=/points/**
         - id: service-product
           uri: http://localhost:8083
           predicates:
-            - Path=/product/**
+            - Path=/products/**

@@ -1,5 +1,6 @@
 package com.domain;
 
+import com.constant.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,10 @@ public class TestOrder {
 
     private Integer version;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    @Builder.Default
+    private OrderStatus status = OrderStatus.CREATED;
 
     @Column(name = "total_amount", nullable = false)
     private Integer totalAmount;

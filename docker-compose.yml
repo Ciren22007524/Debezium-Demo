@@ -33,7 +33,7 @@ services:
   connect:
     image: debezium/connect:2.5
     ports:
-      - "8083:8083"
+      - "8183:8083"
     environment:
       BOOTSTRAP_SERVERS: kafka:9092
       GROUP_ID: 1

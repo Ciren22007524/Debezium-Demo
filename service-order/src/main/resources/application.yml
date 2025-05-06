@@ -21,7 +21,7 @@ debezium:
   connector:
     name: order-connector
     class: io.debezium.connector.mysql.MySqlConnector
-    endpoint-url: http://localhost:8083/connectors
+    endpoint-url: http://localhost:8183/connectors
     database:
       hostname: mysql
       port: 3306

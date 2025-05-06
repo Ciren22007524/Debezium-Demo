@@ -87,18 +87,8 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       proxy: {
-        '/api/product': {
-          target: 'http://localhost:8084', // 你的 Spring Boot API server
-          changeOrigin: true,
-          pathRewrite: { '^/api': '' }
-        },
-        '/api/order': {
-          target: 'http://localhost:8081', // 你的 Spring Boot API server
-          changeOrigin: true,
-          pathRewrite: { '^/api': '' }
-        },
-        '/api/point': {
-          target: 'http://localhost:8082', // 你的 Spring Boot API server
+        '/api': {
+          target: 'http://localhost:8080',
           changeOrigin: true,
           pathRewrite: { '^/api': '' }
         }

@@ -32,6 +32,14 @@ export interface OrderItem {
   subTotal: number;
 }
 
+export interface PointTransaction {
+  id: number;
+  userId: string;
+  amount: number;
+  reason: string;
+  createdAt: string;
+}
+
 export type TableColumn<T> = {
   name: string;
   label: string;

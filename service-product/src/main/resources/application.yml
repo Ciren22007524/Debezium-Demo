@@ -31,7 +31,7 @@ debezium:
       server-name: dbserver_product
       include-list: db_product
     table:
-      include-list: db_product.outbox_event
+      include-list: db_product.outbox_event,db_product.test_product
     kafka:
       bootstrap-servers: kafka-1:9092
     config-topics:

@@ -1,22 +1,26 @@
-import { defineStore } from 'pinia'
-import { api } from 'boot/axios'
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { api } from 'boot/axios';
 import { Product } from 'src/types';
+import { AxiosResponse } from 'axios';
 
-export const useProductStore = defineStore('product', {
-  state: () => ({
-    products: [] as Product[],
-    loading: false
-  }),
+export const useProductStore = defineStore('product', () => {
+  const products = ref<Product[]>([]);
+  const loading = ref(false);
 
-  actions: {
-    async fetchProducts() {
-      this.loading = true
-      try {
-        const res = await api.get('/products')
-        this.products = res.data
-      } finally {
-        this.loading = false
-      }
+  async function fetchProducts() {
+    loading.value = true;
+    try {
+      const res: AxiosResponse<Product[]> = await api.get('/products');
+      products.value = res.data;
+    } finally {
+      loading.value = false;
     }
   }
-})
+
+  return {
+    products,
+    loading,
+    fetchProducts
+  };
+});

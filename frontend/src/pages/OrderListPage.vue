@@ -22,10 +22,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { api } from 'boot/axios'
 import type { Order, TableColumn } from 'src/types'
+import {useOrderStore} from "stores/order-store";
+import {storeToRefs} from "pinia";
 
-const orders = ref<Order[]>([])
+const orderStore = useOrderStore()
+const { orders } = storeToRefs(orderStore)
+
 const loading = ref(true)
 
 const columns: TableColumn<Order>[] = [
@@ -36,12 +39,8 @@ const columns: TableColumn<Order>[] = [
 ]
 
 onMounted(async () => {
-  try {
-    const res = await api.get<Order[]>('/orders')
-    orders.value = res.data
-  } finally {
-    loading.value = false
-  }
+  await orderStore.fetchOrders()
+  loading.value = false
 })
 
 defineOptions({

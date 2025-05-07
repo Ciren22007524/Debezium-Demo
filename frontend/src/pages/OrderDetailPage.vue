@@ -30,7 +30,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { api } from 'boot/axios';
-import {Order, OrderItem, TableColumn} from 'src/types';
+import { Order, OrderItem, TableColumn } from 'src/types';
 import { AxiosResponse } from 'axios';
 
 const route = useRoute();
@@ -58,4 +58,8 @@ onMounted(async () => {
   order.value = orderRes.data;
   items.value = itemsRes.data;
 });
+
+defineOptions({
+  name: 'OrderDetailPage'
+})
 </script>

@@ -45,4 +45,8 @@ const createOrder = async () => {
 
   await api.post('/orders', payload)
 }
+
+defineOptions({
+  name: 'OrderCreatePage'
+})
 </script>

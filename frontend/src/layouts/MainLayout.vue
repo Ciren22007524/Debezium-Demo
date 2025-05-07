@@ -1,42 +1,92 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="bg-white text-black">
       <q-toolbar>
+
+        <!-- 漢堡按鈕：控制 drawer -->
         <q-btn
           flat
           dense
           round
           icon="menu"
-          aria-label="Menu"
           @click="toggleLeftDrawer"
+          class="q-mr-sm"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <!-- Quasar logo：回首頁 -->
+        <q-btn
+          flat
+          dense
+          round
+          tag="router-link"
+          to="/"
+        >
+          <q-avatar size="42px">
+            <img src="/icons/favicon-128x128.png" alt="icon"/>
+          </q-avatar>
+        </q-btn>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title class="text-weight-bold">Microservice Dashboard</q-toolbar-title>
+
+        <q-space />
+
+        <q-input
+          v-model="search"
+          dense
+          outlined
+          rounded
+          placeholder="Search..."
+          class="q-mr-md"
+        />
+        <q-btn dense flat round icon="notifications" />
+        <q-btn dense flat round icon="settings" />
+
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
+      class="bg-primary text-white"
       bordered
-      class="bg-dark text-white"
     >
       <q-list>
-        <q-item-label
-          header
+        <q-item
+          clickable
+          tag="router-link"
+          to="/"
+          class="q-py-md"
         >
-          Essential Links
-        </q-item-label>
+          <q-item-section avatar>
+            <q-avatar size="42px">
+              <img src="/icons/favicon-128x128.png" alt="icon"/>
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="text-weight-bold">Quasar</q-item-label>
+            <q-item-label caption>Home</q-item-label>
+          </q-item-section>
+        </q-item>
 
-        <EssentialLink
+        <q-separator />
+
+        <q-item
           v-for="link in linksList"
           :key="link.title"
-          v-bind="link"
-        />
+          :to="link.link"
+          clickable
+          active-class="bg-white text-primary"
+          tag="router-link"
+        >
+          <q-item-section avatar>
+            <q-icon :name="link.icon" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>{{ link.title }}</q-item-label>
+            <q-item-label caption>{{ link.caption }}</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -48,9 +98,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
-import { useQuasar } from 'quasar';
-const $q = useQuasar();
+import { EssentialLinkProps } from 'components/EssentialLink.vue';
 
 defineOptions({
   name: 'MainLayout'
@@ -58,50 +106,27 @@ defineOptions({
 
 const linksList: EssentialLinkProps[] = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    title: 'Product',
+    caption: 'Product Service',
+    icon: 'shopping_cart',
+    link: '/products' // ← 改成內部路由
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+    title: 'Order',
+    caption: 'Order Service',
+    icon: 'receipt_long',
+    link: '/orders'
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    title: 'Point',
+    caption: 'Point System',
+    icon: 'emoji_events',
+    link: '/points'
   }
 ];
 
 const leftDrawerOpen = ref(false);
+const search = ref('');
 
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value;

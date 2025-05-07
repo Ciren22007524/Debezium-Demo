@@ -15,7 +15,7 @@ spring:
       mode: always
 
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: product-service-group
       auto-offset-reset: earliest
@@ -37,7 +37,7 @@ debezium:
       server-name: dbserver_product
       include-list: db_product
     table:
-      include-list: db_product.outbox_event,db_product.test_product
+      include-list: db_product.outbox_event
     kafka:
       bootstrap-servers: kafka:9092
     config-topics:

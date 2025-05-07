@@ -20,3 +20,8 @@ spring:
           uri: http://localhost:8083
           predicates:
             - Path=/products/**
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG

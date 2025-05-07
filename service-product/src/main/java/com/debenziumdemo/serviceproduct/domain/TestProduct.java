@@ -35,7 +35,7 @@ public class TestProduct {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private ProductStatus status = ProductStatus.CREATED;
+    private ProductStatus status = ProductStatus.EDIT;
 
     private String imgUrl;
 

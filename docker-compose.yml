@@ -7,6 +7,10 @@ services:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - debezium-net
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper
 
   kafka:
     image: confluentinc/cp-kafka:7.0.1
@@ -16,13 +20,18 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - debezium-net
     depends_on:
       - zookeeper
+    volumes:
+      - kafka-data:/var/lib/kafka/data
 
   mysql:
     image: mysql:8
@@ -30,16 +39,19 @@ services:
       - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
+    networks:
+      - debezium-net
     volumes:
       - ./init:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
 
   connect:
     image: debezium/connect:2.5
     ports:
       - "8183:8083"
     environment:
-      BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: 1
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: product-cdc-connect
       CONFIG_STORAGE_TOPIC: connect-configs
       OFFSET_STORAGE_TOPIC: connect-offsets
       STATUS_STORAGE_TOPIC: connect-statuses
@@ -47,6 +59,17 @@ services:
       VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECTOR_PLUGIN_PATH: /kafka/connect
       DATABASE_HISTORY_KAFKA_TOPIC: dbhistory.demo
+    networks:
+      - debezium-net
     depends_on:
       - kafka
       - mysql
+
+volumes:
+  kafka-data:
+  zookeeper-data:
+  mysql-data:
+
+networks:
+  debezium-net:
+    driver: bridge

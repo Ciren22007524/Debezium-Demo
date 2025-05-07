@@ -1,5 +1,7 @@
 package com.service;
 
+import com.constant.AggregateType;
+import com.constant.EventType;
 import com.dao.OrderItemRepository;
 import com.dao.OutboxEventRepository;
 import com.dao.TestOrderRepository;
@@ -70,9 +72,9 @@ public class OrderService {
         );
 
         OutboxEvent event = OutboxEvent.builder()
-                .aggregateType("ORDER")
+                .aggregateType(AggregateType.ORDER)
                 .aggregateId(order.getId())
-                .eventType("ORDER_CREATED")
+                .eventType(EventType.ORDER_CREATED)
                 .payload(new ObjectMapper().writeValueAsString(payload))
                 .build();
 

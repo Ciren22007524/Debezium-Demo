@@ -28,15 +28,17 @@
 
 <script setup lang="ts">
 import { Product, TableColumn } from 'src/types';
+import { onMounted } from 'vue';
+import { useProductStore } from 'stores/product-store';
+import { storeToRefs } from 'pinia'; // 👈 加這行
 
 defineOptions({
   name: 'ProductListPage'
 });
 
-import { onMounted } from 'vue';
-import { useProductStore } from 'stores/product-store';
-
-const { products, loading, fetchProducts } = useProductStore();
+const store = useProductStore();
+const { products, loading } = storeToRefs(store);
+const { fetchProducts } = store;
 
 const columns: TableColumn<Product>[] = [
   { name: 'id', label: 'ID', field: 'id', align: 'left' },

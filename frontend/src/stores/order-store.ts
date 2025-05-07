@@ -1,23 +1,33 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import { api } from 'boot/axios'
-import { ProductOrderRequest } from 'src/types'
-import type { Order } from 'src/types'
+import type { Order, ProductOrderRequest } from 'src/types'
 
-export const useOrderStore = defineStore('order', {
-  state: () => ({
-    orders: [] as Order[]
-  }),
+export const useOrderStore = defineStore('order', () => {
+  const orders = ref<Order[]>([])
+  const loading = ref(false)
 
-  actions: {
-    async fetchOrders() {
+  async function fetchOrders() {
+    loading.value = true
+    try {
       const res = await api.get('/orders')
-      this.orders = res.data
-    },
-
-    async createOrder(payload: ProductOrderRequest[]) {
-      await api.post('/orders', payload)
-      // 重新抓取訂單列表（可選）
-      await this.fetchOrders()
+      orders.value = res.data
+    } catch (err) {
+      console.error(err)
+    } finally {
+      loading.value = false
     }
+  }
+
+  async function createOrder(payload: ProductOrderRequest[]) {
+    await api.post('/orders', payload)
+    await fetchOrders()
+  }
+
+  return {
+    orders,
+    loading,
+    fetchOrders,
+    createOrder
   }
 })

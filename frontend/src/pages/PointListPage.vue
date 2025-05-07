@@ -27,16 +27,15 @@
 </template>
 
 <script setup lang="ts">
-import {PointTransaction, TableColumn} from 'src/types';
-
-defineOptions({
-  name: 'PointListPage'
-});
-
+import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import { usePointStore } from 'stores/point-store';
+import { PointTransaction, TableColumn } from 'src/types';
 
-const { points, loading, fetchPoints } = usePointStore();
+defineOptions({ name: 'PointListPage' });
+
+const pointStore = usePointStore();
+const { points, loading } = storeToRefs(pointStore);
 
 const columns: TableColumn<PointTransaction>[] = [
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
@@ -46,7 +45,7 @@ const columns: TableColumn<PointTransaction>[] = [
   { name: 'createdAt', label: '建立時間', field: 'createdAt', align: 'left' }
 ];
 
-onMounted(() => {
-  fetchPoints();
+onMounted(async () => {
+  await pointStore.fetchPoints();
 });
 </script>

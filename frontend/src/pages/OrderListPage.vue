@@ -5,45 +5,44 @@
         <div class="text-h6">訂單列表</div>
       </q-card-section>
 
+      <q-separator />
+
       <q-card-section>
         <q-table
           :rows="orders"
           :columns="columns"
           row-key="id"
           flat
-          dense
+          bordered
           :loading="loading"
-          no-data-label="目前沒有訂單"
+          v-if="orders.length"
         />
+        <div v-else-if="!loading" class="q-pa-md text-grey">
+          <q-icon name="warning" size="sm" color="orange" class="q-mr-sm" />
+          目前沒有訂單
+        </div>
       </q-card-section>
     </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Order, TableColumn } from 'src/types'
-import { useOrderStore } from 'stores/order-store';
-import { storeToRefs } from 'pinia';
+import { Order, TableColumn } from 'src/types'
+import { onMounted } from 'vue'
+import { useOrderStore } from 'stores/order-store'
 
-const orderStore = useOrderStore()
-const { orders } = storeToRefs(orderStore)
+defineOptions({ name: 'OrderListPage' })
 
-const loading = ref(true)
+const { orders, loading, fetchOrders } = useOrderStore()
 
 const columns: TableColumn<Order>[] = [
-  { name: 'id', label: '訂單編號', field: 'id', align: 'left', sortable: true },
+  { name: 'id', label: '訂單編號', field: 'id', align: 'left' },
   { name: 'status', label: '狀態', field: 'status', align: 'left' },
   { name: 'totalAmount', label: '總金額', field: 'totalAmount', align: 'right' },
   { name: 'createdAt', label: '建立時間', field: 'createdAt', align: 'left' }
 ]
 
-onMounted(async () => {
-  await orderStore.fetchOrders()
-  loading.value = false
-})
-
-defineOptions({
-  name: 'OrderListPage'
+onMounted(() => {
+  fetchOrders()
 })
 </script>

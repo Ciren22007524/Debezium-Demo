@@ -12,7 +12,10 @@ export const useProductStore = defineStore('product', () => {
     loading.value = true;
     try {
       const res: AxiosResponse<Product[]> = await api.get('/products');
+      console.log(res.data);
       products.value = res.data;
+    } catch (err) {
+      console.log(err);
     } finally {
       loading.value = false;
     }

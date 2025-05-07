@@ -1,5 +1,6 @@
 package com.service;
 
+import com.constant.TransactionType;
 import com.dao.PointTransactionRepository;
 import com.domain.PointTransaction;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class PointService {
     public void addEarnPoints(Long orderId, int points, String description) {
         PointTransaction transaction = PointTransaction.builder()
                 .orderId(orderId)
-                .type("EARN")
+                .type(TransactionType.EARN)
                 .points(points)
                 .description(description)
                 .createdAt(LocalDateTime.now())
@@ -27,7 +28,7 @@ public class PointService {
     public void addRedeemPoints(Long orderId, int points, String description) {
         PointTransaction transaction = PointTransaction.builder()
                 .orderId(orderId)
-                .type("REDEEM")
+                .type(TransactionType.REDEEM)
                 .points(points)
                 .description(description)
                 .createdAt(LocalDateTime.now())

@@ -1,8 +1,7 @@
 rootProject.name = 'debenziumdemo'
-include 'service-order', 'service-product', 'service-point', 'service-gateway', 'common-lib'
+include 'service-order', 'service-product', 'service-point', 'service-gateway'
 
 project(':service-order').projectDir = file('service-order')
 project(':service-product').projectDir = file('service-product')
 project(':service-point').projectDir = file('service-point')
 project(':service-gateway').projectDir = file('service-gateway')
-project(':common-lib').projectDir = file('common-lib')

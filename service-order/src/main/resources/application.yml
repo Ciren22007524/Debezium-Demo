@@ -15,11 +15,18 @@ spring:
       mode: always
 
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 debezium:
   connector:
     name: order-connector
+    topic-prefix: db_product
+    connector-class: io.debezium.connector.mysql.MySqlConnector
     class: io.debezium.connector.mysql.MySqlConnector
     endpoint-url: http://localhost:8183/connectors
     database:
@@ -33,7 +40,7 @@ debezium:
     table:
       include-list: db_order.outbox_event
     kafka:
-      bootstrap-servers: kafka-1:9092
+      bootstrap-servers: localhost:9092
     config-topics:
       config-storage-topic: connect-configs
       offset-storage-topic: connect-offsets

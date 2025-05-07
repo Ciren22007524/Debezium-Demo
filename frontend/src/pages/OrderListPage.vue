@@ -23,8 +23,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Order, TableColumn } from 'src/types'
-import {useOrderStore} from "stores/order-store";
-import {storeToRefs} from "pinia";
+import { useOrderStore } from 'stores/order-store';
+import { storeToRefs } from 'pinia';
 
 const orderStore = useOrderStore()
 const { orders } = storeToRefs(orderStore)

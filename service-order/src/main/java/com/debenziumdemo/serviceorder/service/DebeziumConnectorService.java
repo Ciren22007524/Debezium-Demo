@@ -60,17 +60,19 @@ public class DebeziumConnectorService {
         config.put("transforms.outbox.route.by.field", "aggregate_type");
         config.put("transforms.outbox.route.topic.replacement", props.getTopicPrefix() + ".${routedByValue}");
         config.put("transforms.outbox.table.fields.additional.placement", "event_type:header:eventType");
-
-        config.put("transforms.outbox.table.field.name.mapping.enable", "true");
-        config.put("transforms.outbox.table.field.name.mapping.regex", "([a-z]+)_([a-z]+)");
-        config.put("transforms.outbox.table.field.name.mapping.replacement", "$1${upper:$2}");
+        config.put("transforms.outbox.table.expand.json.payload", "true");
+        config.put("transforms.outbox.table.field.name.mapping", String.join(",", List.of(
+                "aggregateId:aggregate_id",
+                "aggregateType:aggregate_type",
+                "eventType:event_type",
+                "createdAt:created_at"
+        )));
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("name", props.getName());
         payload.put("config", config);
 
         try {
-            // 👇 加這行印出 payload 內容（確認 topic 有無漏傳）
             log.info("Debezium connector payload: {}", new ObjectMapper().writeValueAsString(payload));
 
             HttpHeaders headers = new HttpHeaders();

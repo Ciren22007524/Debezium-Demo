@@ -34,13 +34,18 @@ services:
       - kafka-data:/var/lib/kafka/data
 
   mysql:
-    image: mysql:8
+    image: mysql:8.0.34
     ports:
       - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
     networks:
       - debezium-net
+    command: >
+      --server-id=85744
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --binlog-row-image=FULL
     volumes:
       - ./init:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql
@@ -64,6 +69,20 @@ services:
     depends_on:
       - kafka
       - mysql
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8088:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - debezium-net
 
 volumes:
   kafka-data:

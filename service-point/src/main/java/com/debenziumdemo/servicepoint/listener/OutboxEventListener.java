@@ -7,18 +7,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OutboxEventListener {
 
     private final PointTransactionRepository pointRepo;
 
-    @KafkaListener(topics = "dbserver_order.outbox_event", groupId = "point-service")
+    @KafkaListener(topics = "db_order.db_order.outbox_event", groupId = "point-service")
     public void handleOrderCreated(ConsumerRecord<String, String> record) throws JsonProcessingException {
+        log.info("Listener觸發");
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode event = objectMapper.readTree(record.value());
 
@@ -26,7 +29,7 @@ public class OutboxEventListener {
 
         Long orderId = event.get("orderId").asLong();
         int totalAmount = event.get("totalAmount").asInt();
-        int earnedPoints = totalAmount / 10; // 假設 10 元 1 點
+        int earnedPoints = totalAmount / 10;
 
         PointTransaction txn = PointTransaction.builder()
                 .orderId(orderId)

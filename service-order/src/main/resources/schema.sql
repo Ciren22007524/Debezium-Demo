@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS order_item (
     product_id BIGINT,
     quantity INT,
     unit_price DECIMAL,
-    subTotal DECIMAL
+    sub_total DECIMAL
 );
 
 CREATE TABLE IF NOT EXISTS outbox_event (

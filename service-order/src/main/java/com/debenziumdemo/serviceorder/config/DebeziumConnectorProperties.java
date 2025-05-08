@@ -17,6 +17,7 @@ public class DebeziumConnectorProperties {
     private TableConfig table;
     private KafkaConfig kafka;
     private ConfigTopics configTopics;
+    private SchemaHistoryConfig schemaHistory;
 
     private boolean tombstonesOnDelete;
     private boolean includeSchemaChanges;
@@ -48,5 +49,11 @@ public class DebeziumConnectorProperties {
         private String offsetStorageTopic;
         private String statusStorageTopic;
         private String historyTopic;
+    }
+
+    @Data
+    public static class SchemaHistoryConfig {
+        private String bootstrapServers;
+        private String topic;
     }
 }

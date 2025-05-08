@@ -1,6 +1,7 @@
 package com.debenziumdemo.serviceorder.service;
 
 import com.debenziumdemo.serviceorder.config.DebeziumConnectorProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -25,7 +26,10 @@ public class DebeziumConnectorService {
 
         // 1. 正確刪除（加 Accept header）
         try {
-            restTemplate.exchange(connectorUrl, HttpMethod.DELETE, null, String.class);
+            HttpHeaders deleteHeaders = new HttpHeaders();
+            deleteHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
+            HttpEntity<Void> deleteRequest = new HttpEntity<>(deleteHeaders);
+            restTemplate.exchange(connectorUrl, HttpMethod.DELETE, deleteRequest, String.class);
             log.info("Deleted existing Debezium connector: {}", props.getName());
         } catch (Exception e) {
             log.warn("Delete connector failed or skipped: {}", e.getMessage());
@@ -43,19 +47,32 @@ public class DebeziumConnectorService {
         config.put("database.server.name", props.getDatabase().getServerName());
         config.put("database.include.list", props.getDatabase().getIncludeList());
         config.put("table.include.list", props.getTable().getIncludeList());
-        config.put("database.history.kafka.bootstrap.servers", props.getKafka().getBootstrapServers());
-        config.put("database.history.kafka.topic", props.getConfigTopics().getHistoryTopic());
+        config.put("schema.history.internal.kafka.bootstrap.servers", props.getSchemaHistory().getBootstrapServers());
+        config.put("schema.history.internal.kafka.topic", props.getSchemaHistory().getTopic());
         config.put("tombstones.on.delete", String.valueOf(props.isTombstonesOnDelete()));
         config.put("include.schema.changes", String.valueOf(props.isIncludeSchemaChanges()));
         config.put("config.storage.topic", props.getConfigTopics().getConfigStorageTopic());
         config.put("offset.storage.topic", props.getConfigTopics().getOffsetStorageTopic());
         config.put("status.storage.topic", props.getConfigTopics().getStatusStorageTopic());
+        config.put("snapshot.mode", "initial");
+        config.put("transforms", "outbox");
+        config.put("transforms.outbox.type", "io.debezium.transforms.outbox.EventRouter");
+        config.put("transforms.outbox.route.by.field", "aggregate_type");
+        config.put("transforms.outbox.route.topic.replacement", props.getTopicPrefix() + ".${routedByValue}");
+        config.put("transforms.outbox.table.fields.additional.placement", "event_type:header:eventType");
+
+        config.put("transforms.outbox.table.field.name.mapping.enable", "true");
+        config.put("transforms.outbox.table.field.name.mapping.regex", "([a-z]+)_([a-z]+)");
+        config.put("transforms.outbox.table.field.name.mapping.replacement", "$1${upper:$2}");
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("name", props.getName());
         payload.put("config", config);
 
         try {
+            // 👇 加這行印出 payload 內容（確認 topic 有無漏傳）
+            log.info("Debezium connector payload: {}", new ObjectMapper().writeValueAsString(payload));
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);

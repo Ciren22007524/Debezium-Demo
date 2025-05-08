@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Builder
 @Data
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_item")
 public class OrderItem {
 
     @Id
@@ -29,6 +29,6 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @Column(name = "subTotal", nullable = false, precision = 10, scale = 2)
+    @Column(name = "sub_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal subTotal;
 }

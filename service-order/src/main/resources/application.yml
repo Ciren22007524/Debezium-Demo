@@ -25,7 +25,7 @@ spring:
 debezium:
   connector:
     name: order-connector
-    topic-prefix: db_product
+    topic-prefix: db_order
     connector-class: io.debezium.connector.mysql.MySqlConnector
     class: io.debezium.connector.mysql.MySqlConnector
     endpoint-url: http://localhost:8183/connectors
@@ -40,14 +40,16 @@ debezium:
     table:
       include-list: db_order.outbox_event
     kafka:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:29092
     config-topics:
       config-storage-topic: connect-configs
       offset-storage-topic: connect-offsets
       status-storage-topic: connect-statuses
-      history-topic: dbhistory.order
     tombstones-on-delete: false
     include-schema-changes: false
+    schema-history:
+      bootstrap-servers: kafka:29092
+      topic: dbhistory.order
 
 logging:
   level:

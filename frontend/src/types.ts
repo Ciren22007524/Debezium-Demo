@@ -54,3 +54,7 @@ export type TableColumn<T> = {
   headerStyle?: string;
   headerClasses?: string;
 };
+
+export interface CartItem extends Product {
+  quantity: number;
+}

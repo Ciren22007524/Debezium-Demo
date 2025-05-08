@@ -68,6 +68,7 @@ public class OrderService {
         // 4. 寫入 outbox_event
         Map<String, Object> payload = Map.of(
                 "orderId", order.getId(),
+                "totalAmount", totalAmount.intValue(),
                 "items", eventItems
         );
 

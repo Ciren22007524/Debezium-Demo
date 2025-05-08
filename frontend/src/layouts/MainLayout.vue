@@ -47,7 +47,7 @@
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      class="bg-primary text-white"
+      class="custom-drawer"
       bordered
     >
       <q-list>
@@ -64,7 +64,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label class="text-weight-bold">Quasar</q-item-label>
-            <q-item-label caption>Home</q-item-label>
+            <q-item-label caption class="text-white">Home</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -77,6 +77,7 @@
           clickable
           active-class="bg-white text-primary"
           tag="router-link"
+          class="menu-link"
         >
           <q-item-section avatar>
             <q-icon :name="link.icon" />
@@ -132,3 +133,55 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+<style scoped>
+.custom-drawer {
+  background-color: #2F3A56;
+  color: #ECEFF4;
+  border-right: 3px solid #1E263A;
+}
+
+.custom-drawer .q-item {
+  transition: background-color 0.2s;
+}
+
+.custom-drawer .q-item:hover {
+  background-color: #3A4763;
+}
+
+.custom-drawer .q-item.q-router-link--active {
+  background-color: #1E263A;
+  color: #00B4FF;
+}
+.custom-drawer .menu-link {
+  transition: background-color 0.2s;
+}
+
+.custom-drawer .menu-link:hover {
+  background-color: #3A4763;
+}
+
+.custom-drawer .menu-link.q-router-link--active {
+  background-color: #1E263A;
+  color: #00B4FF;
+}
+
+.menu-link:hover:not(.bg-white):not(.text-primary) {
+  background-color: #e0e0e0;
+  color: inherit;
+}
+
+.menu-link:hover:not(.bg-white):not(.text-primary) .q-item__label,
+.menu-link:hover:not(.bg-white):not(.text-primary) .q-icon {
+  color: inherit;
+}
+
+.menu-link.bg-white.text-primary:hover {
+  background-color: white !important;
+  color: #1976d2 !important;
+}
+
+.menu-link.bg-white.text-primary:hover .q-item__label,
+.menu-link.bg-white.text-primary:hover .q-icon {
+  color: #1976d2 !important;
+}
+</style>

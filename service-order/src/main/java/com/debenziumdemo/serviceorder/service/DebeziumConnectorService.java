@@ -57,16 +57,10 @@ public class DebeziumConnectorService {
         config.put("snapshot.mode", "initial");
         config.put("transforms", "outbox");
         config.put("transforms.outbox.type", "io.debezium.transforms.outbox.EventRouter");
-        config.put("transforms.outbox.route.by.field", "aggregate_type");
+        config.put("transforms.outbox.route.by.field", "aggregatetype");
         config.put("transforms.outbox.route.topic.replacement", props.getTopicPrefix() + ".${routedByValue}");
-        config.put("transforms.outbox.table.fields.additional.placement", "event_type:header:eventType");
+        config.put("transforms.outbox.table.fields.additional.placement", "eventtype:header:eventType");
         config.put("transforms.outbox.table.expand.json.payload", "true");
-        config.put("transforms.outbox.table.field.name.mapping", String.join(",", List.of(
-                "aggregateId:aggregate_id",
-                "aggregateType:aggregate_type",
-                "eventType:event_type",
-                "createdAt:created_at"
-        )));
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("name", props.getName());

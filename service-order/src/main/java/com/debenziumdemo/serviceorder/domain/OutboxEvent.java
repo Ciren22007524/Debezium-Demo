@@ -19,22 +19,22 @@ public class OutboxEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "aggregate_id", nullable = false)
+    @Column(name = "aggregateid", nullable = false)
     private Long aggregateId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "aggregate_type", nullable = false)
+    @Column(name = "aggregatetype", nullable = false)
     private AggregateType aggregateType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "event_type", nullable = false)
+    @Column(name = "eventtype", nullable = false)
     private EventType eventType;
 
     @Lob
     @Column(nullable = false)
     private String payload;
 
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = false,
+    @Column(name = "createdat", nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 }

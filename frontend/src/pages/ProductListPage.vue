@@ -53,20 +53,18 @@
         <q-table
           :rows="products"
           :columns="columns"
-          row-key="id"
+          row-key="id || name"
           flat
           bordered
           :loading="loading"
-          v-if="products.length"
+          v-if="!!products.length"
         >
-          <!-- 圖片欄位 slot -->
           <template v-slot:body-cell-imgUrl="props">
             <q-td :props="props">
               <q-img :src="props.row.imgUrl" style="width: 80px; height: auto;" />
             </q-td>
           </template>
 
-          <!-- 操作欄位 slot -->
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <q-btn color="primary" @click="addToCart(props.row)" size="sm" label="加入購物車" />
@@ -93,21 +91,46 @@ import { useRouter } from 'vue-router';
 import { Notify } from 'quasar';
 
 const router = useRouter();
-const store = useProductStore();
-const { products, loading } = storeToRefs(store);
-const { fetchProducts } = store;
+const productStore = useProductStore();
+const { products, loading } = storeToRefs(productStore);
+const { fetchProducts } = productStore;
 
 const columns: TableColumn<Product>[] = [
-  { name: 'imgUrl', label: '圖片', field: 'imgUrl', align: 'left' },
-  { name: 'name', label: '商品名稱', field: 'name', align: 'left' },
-  { name: 'price', label: '價格', field: 'price', align: 'right' },
-  { name: 'stock', label: '庫存', field: 'stock', align: 'right' },
+  {
+    name: 'imgUrl',
+    label: '圖片',
+    field: 'imgUrl',
+    align: 'center',
+    style: 'width: 20%'
+  },
+  {
+    name: 'name',
+    label: '商品名稱',
+    field: 'name',
+    align: 'center',
+    style: 'width: 20%'
+  },
+  {
+    name: 'price',
+    label: '價格',
+    field: 'price',
+    align: 'center',
+    style: 'width: 20%'
+  },
+  {
+    name: 'stock',
+    label: '庫存',
+    field: 'stock',
+    align: 'center',
+    style: 'width: 20%'
+  },
   {
     name: 'actions',
     label: '操作',
     field: 'id',
-    align: 'right',
-    sortable: false
+    align: 'center',
+    sortable: false,
+    style: 'width: 20%'
   }
 ];
 
@@ -139,13 +162,11 @@ function goToCart() {
 }
 
 const cartOpen = ref(false);
-const cartItems = cartStore.cartItems;
+const { cartItems, totalAmount } = storeToRefs(cartStore);
 
 function removeFromCart(productId: number) {
   cartStore.removeItem(productId);
 }
-
-const totalAmount = cartStore.totalAmount;
 
 onMounted(() => {
   fetchProducts();

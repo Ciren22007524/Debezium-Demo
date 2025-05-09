@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,14 +20,20 @@ import org.springframework.stereotype.Component;
 public class OutboxEventListener {
 
     private final PointTransactionRepository pointRepo;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "db_order.db_order.outbox_event", groupId = "point-service")
-    public void handleOrderCreated(ConsumerRecord<String, String> record) throws JsonProcessingException {
-        log.info("Listener觸發");
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode event = objectMapper.readTree(record.value());
+    @KafkaListener(topics = "db_order.ORDER", groupId = "point-service")
+    public void handleOrderCreated(
+            @Payload String payload,
+            @Header("eventType") String eventType,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
+    ) throws Exception {
+        log.info("收到事件：[{}]，來自 topic：[{}], 原始 payload: {}", eventType, topic, payload);
 
-        if (!"ORDER_CREATED".equals(event.get("eventType").asText())) return;
+        if (!"ORDER_CREATED".equals(eventType)) return;
+
+        JsonNode root = objectMapper.readTree(payload);
+        JsonNode event = root.get("payload");
 
         Long orderId = event.get("orderId").asLong();
         int totalAmount = event.get("totalAmount").asInt();
@@ -39,5 +47,6 @@ public class OutboxEventListener {
                 .build();
 
         pointRepo.save(txn);
+        log.info("儲值點數完成：orderId={}, points={}", orderId, earnedPoints);
     }
 }

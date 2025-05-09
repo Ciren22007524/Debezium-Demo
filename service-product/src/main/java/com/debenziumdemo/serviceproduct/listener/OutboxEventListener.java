@@ -1,13 +1,14 @@
 package com.debenziumdemo.serviceproduct.listener;
 
 import com.debenziumdemo.serviceproduct.dao.TestProductRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,14 +16,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class OutboxEventListener {
     private final TestProductRepository productRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "db_order.db_order.outbox_event", groupId = "product-service")
-    public void handleOrderCreated(ConsumerRecord<String, String> record) throws JsonProcessingException {
-        log.info("Listener觸發");
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode event = objectMapper.readTree(record.value());
+    @KafkaListener(topics = "db_order.ORDER", groupId = "product-service")
+    public void handleOrderCreated(
+            @Payload String payload,
+            @Header("eventType") String eventType,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
+    ) throws Exception {
+        log.info("收到事件：[{}]，來自 topic：[{}], 原始 payload: {}", eventType, topic, payload);
 
-        if (!"ORDER_CREATED".equals(event.get("eventType").asText())) return;
+        if (!"ORDER_CREATED".equals(eventType)) return;
+
+        JsonNode root = objectMapper.readTree(payload);
+        JsonNode event = root.get("payload");
 
         for (JsonNode item : event.get("items")) {
             Long productId = item.get("productId").asLong();
@@ -31,6 +38,7 @@ public class OutboxEventListener {
             productRepository.findById(productId).ifPresent(product -> {
                 product.setStock(product.getStock() - quantity);
                 productRepository.save(product);
+                log.info("扣庫存：productId={}, 扣除數量={}", productId, quantity);
             });
         }
     }

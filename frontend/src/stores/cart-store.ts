@@ -8,11 +8,11 @@ export const useCartStore = defineStore('cart', {
 
   getters: {
     // 總數量（item 數 × 數量）
-    totalQuantity: (state): number =>
+    totalQuantity: (state: { cartItems: CartItem[] }): number =>
       state.cartItems.reduce((sum, item) => sum + item.quantity, 0),
 
     // 總金額
-    totalAmount: (state): number =>
+    totalAmount: (state: { cartItems: CartItem[] }): number =>
       state.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
   },
 

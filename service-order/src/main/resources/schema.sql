@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS order_item (
 
 CREATE TABLE IF NOT EXISTS outbox_event (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    aggregate_type VARCHAR(255),
-    aggregate_id BIGINT,
-    event_type VARCHAR(255),
+    aggregatetype VARCHAR(255),
+    aggregateid BIGINT,
+    eventtype VARCHAR(255),
     payload TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

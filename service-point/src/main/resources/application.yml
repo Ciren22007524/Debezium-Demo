@@ -9,7 +9,10 @@ spring:
     url: jdbc:mysql://localhost:3307/db_point
     username: root
     password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  sql:
+    init:
+      mode: always
 
   kafka:
     bootstrap-servers: localhost:9092

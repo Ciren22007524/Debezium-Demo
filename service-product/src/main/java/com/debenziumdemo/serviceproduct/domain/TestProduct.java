@@ -1,6 +1,7 @@
 package com.debenziumdemo.serviceproduct.domain;
 
 import com.debenziumdemo.serviceproduct.constant.ProductStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,9 +41,11 @@ public class TestProduct {
     private String imgUrl;
 
     @Column(name = "created_at", updatable = false, nullable = false)
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Taipei")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Taipei")
     private LocalDateTime updatedAt;
 
     @PrePersist

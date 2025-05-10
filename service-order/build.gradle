@@ -1,10 +1,15 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
+    id 'application'
 }
 
 group = 'com.debenziumdemo'
 version = '0.0.1-SNAPSHOT'
+
+application {
+    mainClass = 'com.debenziumdemo.serviceorder.ServiceOrderApplication'
+}
 
 java {
     toolchain {
@@ -28,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'

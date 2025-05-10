@@ -1,6 +1,7 @@
 package com.debenziumdemo.serviceorder.domain;
 
 import com.debenziumdemo.serviceorder.constant.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,9 +31,11 @@ public class TestOrder {
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Taipei")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false, insertable = false, updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Taipei")
     private LocalDateTime updatedAt;
 }

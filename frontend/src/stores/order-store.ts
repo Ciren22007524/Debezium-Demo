@@ -2,12 +2,10 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/axios'
 import type { Order, ProductOrderRequest } from 'src/types'
-import { useProductStore } from 'stores/product-store';
 
 export const useOrderStore = defineStore('order', () => {
   const orders = ref<Order[]>([])
   const loading = ref(false)
-  const productStore = useProductStore()
 
   async function fetchOrders() {
     loading.value = true

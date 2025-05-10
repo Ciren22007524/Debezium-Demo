@@ -36,10 +36,38 @@ defineOptions({ name: 'OrderListPage' })
 const { orders, loading, fetchOrders } = useOrderStore()
 
 const columns: TableColumn<Order>[] = [
-  { name: 'id', label: '訂單編號', field: 'id', align: 'left' },
-  { name: 'status', label: '狀態', field: 'status', align: 'left' },
-  { name: 'totalAmount', label: '總金額', field: 'totalAmount', align: 'right' },
-  { name: 'createdAt', label: '建立時間', field: 'createdAt', align: 'left' }
+  {
+    name: 'id',
+    label: '訂單編號',
+    field: 'id',
+    align: 'center',
+    style: 'width: 25%',
+    headerStyle: 'width: 25%'
+  },
+  {
+    name: 'status',
+    label: '狀態',
+    field: 'status',
+    align: 'center',
+    style: 'width: 25%',
+    headerStyle: 'width: 25%'
+  },
+  {
+    name: 'totalAmount',
+    label: '總金額',
+    field: 'totalAmount',
+    align: 'center',
+    style: 'width: 25%',
+    headerStyle: 'width: 25%'
+  },
+  {
+    name: 'createdAt',
+    label: '建立時間',
+    field: 'createdAt',
+    align: 'center',
+    style: 'width: 25%',
+    headerStyle: 'width: 25%'
+  }
 ]
 
 onMounted(() => {

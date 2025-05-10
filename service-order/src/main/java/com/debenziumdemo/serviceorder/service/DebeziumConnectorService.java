@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,21 +23,49 @@ public class DebeziumConnectorService {
     private final DebeziumConnectorProperties props;
 
     public void registerOutboxConnector() {
+        // 刪除已有的connector
+        deleteConnector();
+        Map<String, Object> config = new HashMap<>();
+        setConnectorParams(config);
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("name", props.getName());
+        payload.put("config", config);
+
+        try {
+            log.info("Debezium connector payload: {}", new ObjectMapper().writeValueAsString(payload));
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(props.getEndpointUrl(), request, String.class);
+            log.info("Debezium connector register response; status: {}, body: {}", response.getStatusCode(), response.getBody());
+        } catch (HttpClientErrorException.Conflict e) {
+            log.warn("Connector already exists: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("Failed to register Debezium connector", e);
+        }
+    }
+
+    private void deleteConnector() {
         String connectorUrl = props.getEndpointUrl() + "/" + props.getName();
 
-        // 1. 正確刪除（加 Accept header）
         try {
-            HttpHeaders deleteHeaders = new HttpHeaders();
-            deleteHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
-            HttpEntity<Void> deleteRequest = new HttpEntity<>(deleteHeaders);
-            restTemplate.exchange(connectorUrl, HttpMethod.DELETE, deleteRequest, String.class);
-            log.info("Deleted existing Debezium connector: {}", props.getName());
-        } catch (Exception e) {
-            log.warn("Delete connector failed or skipped: {}", e.getMessage());
-        }
+            URL url = new URL(connectorUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(false);
+            conn.connect();
 
-        // 2. 註冊 connector
-        Map<String, Object> config = new HashMap<>();
+            int responseCode = conn.getResponseCode();
+            log.info("DELETE returned status: {}", responseCode);
+        } catch (Exception e) {
+            log.warn("Delete connector failed: {}", e.getMessage());
+        }
+    }
+
+    private void setConnectorParams(Map<String, Object> config) {
         config.put("connector.class", props.getConnectorClass());
         config.put("database.hostname", props.getDatabase().getHostname());
         config.put("topic.prefix", props.getTopicPrefix());
@@ -61,24 +90,5 @@ public class DebeziumConnectorService {
         config.put("transforms.outbox.route.topic.replacement", props.getTopicPrefix() + ".${routedByValue}");
         config.put("transforms.outbox.table.fields.additional.placement", "eventtype:header:eventType");
         config.put("transforms.outbox.table.expand.json.payload", "true");
-
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("name", props.getName());
-        payload.put("config", config);
-
-        try {
-            log.info("Debezium connector payload: {}", new ObjectMapper().writeValueAsString(payload));
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
-
-            ResponseEntity<String> response = restTemplate.postForEntity(props.getEndpointUrl(), request, String.class);
-            log.info("Debezium connector register response; status: {}, body: {}", response.getStatusCode(), response.getBody());
-        } catch (HttpClientErrorException.Conflict e) {
-            log.warn("Connector already exists: {}", e.getMessage());
-        } catch (Exception e) {
-            log.error("Failed to register Debezium connector", e);
-        }
     }
 }

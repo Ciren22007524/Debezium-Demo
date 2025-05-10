@@ -2,6 +2,7 @@ package com.debenziumdemo.serviceorder.domain;
 
 import com.debenziumdemo.serviceorder.constant.AggregateType;
 import com.debenziumdemo.serviceorder.constant.EventType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,5 +37,6 @@ public class OutboxEvent {
 
     @Column(name = "createdat", nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Taipei")
     private LocalDateTime createdAt;
 }

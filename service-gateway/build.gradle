@@ -1,10 +1,15 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
+    id 'application'
 }
 
 group = 'com.debenziumdemo'
 version = '0.0.1-SNAPSHOT'
+
+application {
+    mainClass = 'com.debenziumdemo.servicegateway.ServiceGatewayApplication'
+}
 
 java {
     toolchain {

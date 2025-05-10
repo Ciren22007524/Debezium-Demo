@@ -1,6 +1,7 @@
 package com.debenziumdemo.servicepoint.domain;
 
 import com.debenziumdemo.servicepoint.constant.TransactionType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,7 @@ public class PointTransaction {
     private String description;
 
     @Column(name = "created_at", updatable = false, nullable = false)
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Taipei")
     private LocalDateTime createdAt;
 
     @PrePersist

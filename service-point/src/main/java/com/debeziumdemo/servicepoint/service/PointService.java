@@ -1,8 +1,8 @@
 package com.debeziumdemo.servicepoint.service;
 
-import com.debeziumdemo.servicepoint.constant.TransactionType;
-import com.debeziumdemo.servicepoint.dao.PointTransactionRepository;
-import com.debeziumdemo.servicepoint.domain.PointTransaction;
+import com.debeziumdemo.servicepoint.domain.model.TransactionType;
+import com.debeziumdemo.servicepoint.domain.repository.PointTransactionRepository;
+import com.debeziumdemo.servicepoint.domain.model.PointTransaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

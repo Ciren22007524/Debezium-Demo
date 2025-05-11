@@ -1,8 +1,8 @@
 package com.debeziumdemo.serviceorder.controller;
 
-import com.debeziumdemo.serviceorder.domain.OrderItem;
-import com.debeziumdemo.serviceorder.domain.TestOrder;
-import com.debeziumdemo.serviceorder.dto.ProductOrderRequest;
+import com.debeziumdemo.serviceorder.domain.model.OrderItem;
+import com.debeziumdemo.serviceorder.domain.model.TestOrder;
+import com.debeziumdemo.serviceorder.domain.model.dto.ProductOrderRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.debeziumdemo.serviceorder.service.OrderService;
 import lombok.RequiredArgsConstructor;

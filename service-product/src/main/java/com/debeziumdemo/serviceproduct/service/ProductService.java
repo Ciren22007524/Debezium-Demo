@@ -1,7 +1,10 @@
 package com.debeziumdemo.serviceproduct.service;
 
-import com.debeziumdemo.serviceproduct.dao.TestProductRepository;
-import com.debeziumdemo.serviceproduct.domain.TestProduct;
+import com.debeziumdemo.serviceproduct.domain.model.ProductStatus;
+import com.debeziumdemo.serviceproduct.domain.repository.TestProductRepository;
+import com.debeziumdemo.serviceproduct.domain.model.TestProduct;
+import com.debeziumdemo.serviceproduct.domain.state.ProductState;
+import com.debeziumdemo.serviceproduct.domain.state.ProductStateFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
     private final TestProductRepository productRepository;
+    private final ProductStateFactory stateFactory;
 
     public List<TestProduct> getProductList() {
         return productRepository.findAll();
@@ -29,17 +33,17 @@ public class ProductService {
     }
 
     @Transactional
-    public void decreaseStock(Long productId, int quantity) {
+    public void decreaseStock(Long productId, int qty) {
+
         TestProduct product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
-        int newStock = product.getStock() - quantity;
-        if (newStock < 0) {
-            throw new IllegalStateException("庫存不足: productId=" + productId);
-        }
+        ProductState state = stateFactory.of(product.getStatus());
+        ProductStatus next = state.decreaseStock(product, qty);
+        product.setStatus(next);
 
-        product.setStock(newStock);
         productRepository.save(product);
-        log.info("扣庫存完成：productId={}, 扣除={}, 剩餘={}", productId, quantity, newStock);
+        log.info("扣庫存完成：productId={}, qty={}, remain={}, status={}",
+                productId, qty, product.getStock(), next);
     }
 }

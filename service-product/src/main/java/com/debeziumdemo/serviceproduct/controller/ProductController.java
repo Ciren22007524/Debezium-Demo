@@ -1,6 +1,6 @@
 package com.debeziumdemo.serviceproduct.controller;
 
-import com.debeziumdemo.serviceproduct.domain.TestProduct;
+import com.debeziumdemo.serviceproduct.domain.model.TestProduct;
 import com.debeziumdemo.serviceproduct.service.ProductService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,6 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-
-    @PostConstruct
-    public void init() {
-        System.out.println(">>> ProductController loaded");
-    }
 
     @GetMapping
     public List<TestProduct> getAllProduct() {

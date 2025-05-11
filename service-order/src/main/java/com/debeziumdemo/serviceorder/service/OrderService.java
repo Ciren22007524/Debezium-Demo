@@ -1,14 +1,14 @@
 package com.debeziumdemo.serviceorder.service;
 
-import com.debeziumdemo.serviceorder.constant.AggregateType;
-import com.debeziumdemo.serviceorder.constant.EventType;
-import com.debeziumdemo.serviceorder.dao.OrderItemRepository;
-import com.debeziumdemo.serviceorder.dao.OutboxEventRepository;
-import com.debeziumdemo.serviceorder.dao.TestOrderRepository;
-import com.debeziumdemo.serviceorder.domain.OrderItem;
-import com.debeziumdemo.serviceorder.domain.OutboxEvent;
-import com.debeziumdemo.serviceorder.domain.TestOrder;
-import com.debeziumdemo.serviceorder.dto.ProductOrderRequest;
+import com.debeziumdemo.serviceorder.domain.model.enums.AggregateType;
+import com.debeziumdemo.serviceorder.domain.model.enums.EventType;
+import com.debeziumdemo.serviceorder.domain.repository.OrderItemRepository;
+import com.debeziumdemo.serviceorder.domain.repository.OutboxEventRepository;
+import com.debeziumdemo.serviceorder.domain.repository.TestOrderRepository;
+import com.debeziumdemo.serviceorder.domain.model.OrderItem;
+import com.debeziumdemo.serviceorder.domain.model.OutboxEvent;
+import com.debeziumdemo.serviceorder.domain.model.TestOrder;
+import com.debeziumdemo.serviceorder.domain.model.dto.ProductOrderRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;

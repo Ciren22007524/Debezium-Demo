@@ -1,7 +1,7 @@
 package com.debeziumdemo.servicepoint.controller;
 
 import com.debeziumdemo.servicepoint.service.PointService;
-import com.debeziumdemo.servicepoint.domain.PointTransaction;
+import com.debeziumdemo.servicepoint.domain.model.PointTransaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

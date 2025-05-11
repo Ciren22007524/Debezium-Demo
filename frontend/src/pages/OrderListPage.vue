@@ -8,19 +8,24 @@
       <q-separator />
 
       <q-card-section>
-        <q-table
-          :rows="orders"
-          :columns="columns"
-          row-key="id"
-          flat
-          bordered
-          :loading="loading"
-          v-if="orders.length"
-        />
-        <div v-else-if="!loading" class="q-pa-md text-grey">
-          <q-icon name="warning" size="sm" color="orange" class="q-mr-sm" />
-          目前沒有訂單
-        </div>
+        <template v-if="!loading && orders.length">
+          <q-table
+            :rows="orders"
+            :columns="columns"
+            row-key="id"
+            flat
+            bordered
+          />
+        </template>
+
+        <template v-else-if="!loading && orders.length === 0">
+          <div class="q-pa-md text-grey">
+            <q-icon name="warning" size="sm" color="orange" class="q-mr-sm" />
+            目前沒有訂單
+          </div>
+        </template>
+
+        <q-inner-loading :showing="loading" />
       </q-card-section>
     </q-card>
   </q-page>
@@ -30,10 +35,12 @@
 import { Order, TableColumn } from 'src/types'
 import { onMounted } from 'vue'
 import { useOrderStore } from 'stores/order-store'
+import { storeToRefs } from 'pinia';
 
 defineOptions({ name: 'OrderListPage' })
-
-const { orders, loading, fetchOrders } = useOrderStore()
+const orderStore = useOrderStore()
+const { orders, loading } = storeToRefs(orderStore)
+const { fetchOrders } = orderStore
 
 const columns: TableColumn<Order>[] = [
   {

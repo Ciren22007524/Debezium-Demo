@@ -1,6 +1,6 @@
 package com.debeziumdemo.serviceproduct.listener;
 
-import com.debeziumdemo.serviceproduct.dao.TestProductRepository;
+import com.debeziumdemo.serviceproduct.service.ProductService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class OutboxEventListener {
-    private final TestProductRepository productRepository;
+    private final ProductService productService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @KafkaListener(topics = "db_order.ORDER", groupId = "product-service")
@@ -35,11 +35,7 @@ public class OutboxEventListener {
             Long productId = item.get("productId").asLong();
             int quantity = item.get("quantity").asInt();
 
-            productRepository.findById(productId).ifPresent(product -> {
-                product.setStock(product.getStock() - quantity);
-                productRepository.save(product);
-                log.info("扣庫存：productId={}, 扣除數量={}", productId, quantity);
-            });
+            productService.decreaseStock(productId, quantity);
         }
     }
 }

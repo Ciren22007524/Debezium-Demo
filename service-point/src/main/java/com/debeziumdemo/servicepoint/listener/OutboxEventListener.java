@@ -1,8 +1,6 @@
 package com.debeziumdemo.servicepoint.listener;
 
-import com.debeziumdemo.servicepoint.constant.TransactionType;
-import com.debeziumdemo.servicepoint.dao.PointTransactionRepository;
-import com.debeziumdemo.servicepoint.domain.PointTransaction;
+import com.debeziumdemo.servicepoint.service.PointService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class OutboxEventListener {
-
-    private final PointTransactionRepository pointRepo;
+    private final PointService pointService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @KafkaListener(topics = "db_order.ORDER", groupId = "point-service")
@@ -38,14 +35,7 @@ public class OutboxEventListener {
         int totalAmount = event.get("totalAmount").asInt();
         int earnedPoints = totalAmount / 10;
 
-        PointTransaction txn = PointTransaction.builder()
-                .orderId(orderId)
-                .type(TransactionType.EARN)
-                .points(earnedPoints)
-                .description("購物回饋")
-                .build();
-
-        pointRepo.save(txn);
+        pointService.addEarnPoints(orderId, earnedPoints, "購物回饋");
         log.info("儲值點數完成：orderId={}, points={}", orderId, earnedPoints);
     }
 }

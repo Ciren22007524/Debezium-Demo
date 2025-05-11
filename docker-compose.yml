@@ -2,7 +2,7 @@ version: '3.8'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
-    container_name: zookeeper
+    container_name: demo_zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -11,10 +11,13 @@ services:
       - debezium-net
     volumes:
       - zookeeper-data:/var/lib/zookeeper
+    labels:
+      - "project=debeziumdemo"
+      - "tier=infra"
 
   kafka:
     image: confluentinc/cp-kafka:7.0.1
-    container_name: kafka
+    container_name: demo_kafka
     ports:
       - "9092:9092"
     environment:
@@ -32,9 +35,13 @@ services:
       - zookeeper
     volumes:
       - kafka-data:/var/lib/kafka/data
+    labels:
+      - "project=debeziumdemo"
+      - "tier=infra"
 
   mysql:
     image: mysql:8.0.34
+    container_name: demo_mysql
     ports:
       - "3307:3306"
     environment:
@@ -49,9 +56,13 @@ services:
     volumes:
       - ./init:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql
+    labels:
+      - "project=debeziumdemo"
+      - "tier=db"
 
   connect:
     image: debezium/connect:2.5
+    container_name: demo_connect
     ports:
       - "8183:8083"
     environment:
@@ -69,9 +80,13 @@ services:
     depends_on:
       - kafka
       - mysql
+    labels:
+      - "project=debeziumdemo"
+      - "tier=infra"
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: demo_kafka_ui
     ports:
       - "8088:8080"
     environment:
@@ -83,6 +98,9 @@ services:
       - zookeeper
     networks:
       - debezium-net
+    labels:
+      - "project=debeziumdemo"
+      - "tier=infra"
 
 volumes:
   kafka-data:

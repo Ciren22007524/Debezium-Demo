@@ -13,6 +13,11 @@ import java.util.List;
 public class PointController {
     private final PointService pointService;
 
+    @GetMapping
+    public List<PointTransaction> getAllPointTransactions() {
+        return pointService.getAllPointsTransaction();
+    }
+
     @PostMapping("/earn")
     public void earnPoints(@RequestParam Long orderId,
                            @RequestParam int points,

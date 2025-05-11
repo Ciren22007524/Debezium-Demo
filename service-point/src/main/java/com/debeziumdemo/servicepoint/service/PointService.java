@@ -39,4 +39,8 @@ public class PointService {
     public List<PointTransaction> getPointsByOrder(Long orderId) {
         return pointTransactionRepository.findAllByOrderId(orderId);
     }
+
+    public List<PointTransaction> getAllPointsTransaction() {
+        return pointTransactionRepository.findAll();
+    }
 }

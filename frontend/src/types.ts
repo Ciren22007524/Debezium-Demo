@@ -33,11 +33,12 @@ export interface OrderItem {
 }
 
 export interface PointTransaction {
-  id: number;
-  userId: string;
-  amount: number;
-  reason: string;
-  createdAt: string;
+  id: number
+  orderId: number
+  type: 'EARN' | 'USE'
+  points: number
+  description: string
+  createdAt: string
 }
 
 export type TableColumn<T> = {

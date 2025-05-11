@@ -8,6 +8,12 @@
       <q-separator />
 
       <q-card-section>
+        <div class="text-subtitle1 text-primary">目前總積分：{{ totalPoints }}</div>
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section>
         <q-table
           :rows="points"
           :columns="columns"
@@ -35,14 +41,51 @@ import { PointTransaction, TableColumn } from 'src/types';
 defineOptions({ name: 'PointListPage' });
 
 const pointStore = usePointStore();
-const { points, loading } = storeToRefs(pointStore);
+const { points, loading, totalPoints } = storeToRefs(pointStore);
 
 const columns: TableColumn<PointTransaction>[] = [
-  { name: 'id', label: 'ID', field: 'id', align: 'left' },
-  { name: 'userId', label: '使用者', field: 'userId', align: 'left' },
-  { name: 'amount', label: '點數', field: 'amount', align: 'right' },
-  { name: 'reason', label: '原因', field: 'reason', align: 'left' },
-  { name: 'createdAt', label: '建立時間', field: 'createdAt', align: 'left' }
+  {
+    name: 'id',
+    label: 'ID',
+    field: 'id',
+    align: 'center',
+    style: 'width: 15%'
+  },
+  {
+    name: 'orderId',
+    label: '訂單編號',
+    field: 'orderId',
+    align: 'center',
+    style: 'width: 15%'
+  },
+  {
+    name: 'type',
+    label: '類型',
+    field: 'type',
+    align: 'center',
+    style: 'width: 15%'
+  },
+  {
+    name: 'points',
+    label: '點數',
+    field: 'points',
+    align: 'center',
+    style: 'width: 15%'
+  },
+  {
+    name: 'description',
+    label: '說明',
+    field: 'description',
+    align: 'center',
+    style: 'width: 15%'
+  },
+  {
+    name: 'createdAt',
+    label: '建立時間',
+    field: 'createdAt',
+    align: 'center',
+    style: 'width: 25%'
+  }
 ];
 
 onMounted(async () => {

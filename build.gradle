@@ -4,7 +4,7 @@ plugins {
 }
 
 allprojects {
-    group = 'com.debenziumdemo'
+    group = 'com.debeziumdemo'
     version = '0.0.1-SNAPSHOT'
     repositories {
         mavenCentral()

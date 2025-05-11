@@ -1,4 +1,4 @@
-rootProject.name = 'debenziumdemo'
+rootProject.name = 'debeziumdemo'
 include 'service-order', 'service-product', 'service-point', 'service-gateway'
 
 project(':service-order').projectDir = file('service-order')

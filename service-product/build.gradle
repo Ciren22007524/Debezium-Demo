@@ -8,7 +8,7 @@ group = 'com.debenziumdemo'
 version = '0.0.1-SNAPSHOT'
 
 application {
-    mainClass = 'com.debenziumdemo.serviceproduct.ServiceProductApplication'
+    mainClass = 'com.debeziumdemo.serviceproduct.ServiceProductApplication'
 }
 
 java {
